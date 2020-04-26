@@ -22,4 +22,9 @@ abstract class AbstractMessage
      * @return int
      */
     abstract public function getBinaryLength(): int;
+
+    /**
+     * @return mixed
+     */
+    abstract public function getMessage();
 }

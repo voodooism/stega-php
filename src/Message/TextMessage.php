@@ -89,7 +89,7 @@ class TextMessage extends AbstractMessage
     /**
      * @return string
      */
-    public function getString(): string
+    public function getMessage(): string
     {
         return $this->string;
     }

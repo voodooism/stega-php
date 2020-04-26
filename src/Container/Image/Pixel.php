@@ -65,9 +65,9 @@ class Pixel
      * @param int $g
      * @param int $b
      */
-    public function modifyPixel(int $r, ?int $g = null, ?int $b = null): void
+    public function modifyPixel(?int $r = null, ?int $g = null, ?int $b = null): void
     {
-        $this->r = $this->modifyLastSignificantBit($this->r, $r);
+        $this->r = $r !== null ? $this->modifyLastSignificantBit($this->r, $r) : $this->r;
         $this->g = $g !== null ? $this->modifyLastSignificantBit($this->g, $g) : $this->g;
         $this->b = $b !== null ? $this->modifyLastSignificantBit($this->b, $b) : $this->b;
 

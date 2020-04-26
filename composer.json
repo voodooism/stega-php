@@ -5,9 +5,9 @@
   "description": "PHP library for image steganography",
   "require": {
     "paragonie/seedspring": "^1.1",
+    "symfony/polyfill-php74": "^1.15",
     "ext-gd": "*",
-    "ext-mbstring": "*",
-    "symfony/polyfill-php74": "^1.15"
+    "ext-mbstring": "*"
   },
   "autoload": {
     "psr-4": {

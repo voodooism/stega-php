@@ -66,7 +66,7 @@ class ImageContainer extends AbstractContainer
      */
     public function injectMessage(array $bits): void
     {
-        $pixels = array_chunk($bits, 3);
+        $pixels = $this->splitArrayOnChunks($bits);
 
         foreach ($pixels as $number => $lastBits) {
             $pixel = new Pixel($this->resource, $this->width, $number);
@@ -84,7 +84,7 @@ class ImageContainer extends AbstractContainer
         $lastPixel = (int)ceil(($start + $count) / 3);
 
         $lastSignificantBits = [];
-        for ($i = $firstPixel; $i <= $lastPixel; $i++) {
+        for ($i = $firstPixel; $i < $lastPixel; $i++) {
             $pixel = new Pixel($this->resource, $this->width, $i);
 
             $lastSignificantBits[] = $pixel->getLastSignificantBits();
@@ -120,5 +120,27 @@ class ImageContainer extends AbstractContainer
         if ($result === false) {
             throw new RuntimeException('Can not save image');
         }
+    }
+
+    /**
+     * @param int[] $array
+     *
+     * @return array<int, array<int, int|null>>
+     */
+    private function splitArrayOnChunks(array $array): array
+    {
+        $result = [];
+
+        /** @var int $key */
+        foreach ($array as $key => $value) {
+            $chunkKey = (int)floor($key / 3);
+
+            $result[$chunkKey] = $result[$chunkKey] ?? [null, null, null];
+            $result[$chunkKey][$key % 3] = $value;
+        }
+
+        ksort($result);
+
+        return $result;
     }
 }
