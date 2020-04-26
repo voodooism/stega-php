@@ -83,11 +83,13 @@ class Pixel
      */
     public function modifyLastSignificantBit(int $value, int $bit): int
     {
-        $binary = substr_replace(decbin($value), (string)$bit, 7);
+        $binaryString = decbin($value);
 
-        $modified = (int)bindec($binary);
+        $lsbChanged = substr_replace($binaryString, (string)$bit, strlen($binaryString) - 1);
 
-        return $modified;
+        $integer = (int)bindec($lsbChanged);
+
+        return $integer;
     }
 
     /**

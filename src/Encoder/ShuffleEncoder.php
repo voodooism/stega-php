@@ -20,6 +20,11 @@ class ShuffleEncoder extends AbstractEncoder
     private $prng;
 
     /**
+     * @var array
+     */
+    private $usedKeys = [];
+
+    /**
      * ShuffleEncoder constructor.
      *
      * @param string $password
@@ -88,7 +93,8 @@ class ShuffleEncoder extends AbstractEncoder
         while($current < $count) {
             $key = $this->prng->getInt(0, $capacity);
 
-            if (!isset($result[$key])) {
+            if (!isset($this->usedKeys[$key])) {
+                $this->usedKeys[$key] = true;
                 $result[$key] = true;
                 $current++;
             }

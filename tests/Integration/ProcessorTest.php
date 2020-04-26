@@ -18,10 +18,34 @@ class ProcessorTest extends TestCase
      */
     private $fixturesPath;
 
+    /**
+     * @var string
+     */
+    private $container;
+
+    /**
+     * @var string
+     */
+    private $message;
+
+    /**
+     * @var string
+     */
+    private $encodedImage;
+
     protected function setUp(): void
     {
        $this->fixturesPath = __DIR__ . '/../fixtures';
+       $this->container = __DIR__ . '/../fixtures/container.png';
+       $this->message = __DIR__ . '/../fixtures/16kb.txt';
+       $this->encodedImage = __DIR__ . '/../fixtures/encoded_container.png';
+    }
 
+    protected function tearDown(): void
+    {
+        if (file_exists($this->encodedImage)) {
+            unlink($this->encodedImage);
+        }
     }
 
     public function testImageContainerTextMessageSimpleEncoder(): void
@@ -29,18 +53,18 @@ class ProcessorTest extends TestCase
         $processor = new Processor(new SimpleEncoder());
 
         $processor->encode(
-            new ImageContainer($containerPath = $this->fixturesPath . '/container.png'),
-            new TextMessage($messageText = 'hello world'),
+            new ImageContainer($this->container),
+            new TextMessage($messageText = file_get_contents($this->message)),
             $this->fixturesPath
         );
 
         $this->assertNotEquals(
-            file_get_contents($containerPath),
-            file_get_contents($this->fixturesPath . '/encoded_container.png')
+            file_get_contents($this->container),
+            file_get_contents($this->encodedImage)
         );
 
         $decodedMessage = $processor->decode(
-            new ImageContainer($this->fixturesPath . '/encoded_container.png')
+            new ImageContainer($this->encodedImage)
         );
 
         $this->assertEquals($messageText, $decodedMessage->getMessage());
@@ -48,23 +72,23 @@ class ProcessorTest extends TestCase
 
     public function testImageContainerTextMessageShuffleEncoder(): void
     {
-        $processor = new Processor(new ShuffleEncoder('password'));
+        $processor = new Processor($encoder = new ShuffleEncoder('secret123'));
 
         $processor->encode(
-            new ImageContainer($containerPath = $this->fixturesPath . '/container.png'),
-            new TextMessage($messageText = 'hello world'),
+            new ImageContainer($this->container),
+            new TextMessage($messageText = file_get_contents($this->message)),
             $this->fixturesPath
         );
 
         $this->assertNotEquals(
-            file_get_contents($containerPath),
-            file_get_contents($this->fixturesPath . '/encoded_container.png')
+            file_get_contents($this->container),
+            file_get_contents($this->encodedImage)
         );
 
-        $newProcessor = new Processor(new ShuffleEncoder('password'));
+        $newProcessor = new Processor($decoder = new ShuffleEncoder('secret123'));
 
         $decodedMessage = $newProcessor->decode(
-            new ImageContainer($this->fixturesPath . '/encoded_container.png')
+            new ImageContainer($this->encodedImage)
         );
 
         $this->assertEquals($messageText, $decodedMessage->getMessage());
