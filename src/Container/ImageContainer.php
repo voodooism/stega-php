@@ -41,6 +41,8 @@ class ImageContainer extends AbstractContainer
             throw new RuntimeException('You should provide correct path to your image');
         }
 
+        $this->type = ContainerTypeEnum::IMAGE_TYPE;
+
         $this->imageName = basename($path);
 
         $this->resource = imagecreatefromstring(
@@ -80,7 +82,7 @@ class ImageContainer extends AbstractContainer
      */
     public function extractLastSignificantBits(int $start, int $count): array
     {
-        $firstPixel = (int)floor($start / 3);
+        $firstPixel = (int)($start / 3);
         $lastPixel = (int)ceil(($start + $count) / 3);
 
         $lastSignificantBits = [];
@@ -133,7 +135,7 @@ class ImageContainer extends AbstractContainer
 
         /** @var int $key */
         foreach ($array as $key => $value) {
-            $chunkKey = (int)floor($key / 3);
+            $chunkKey = (int)($key / 3);
 
             $result[$chunkKey] = $result[$chunkKey] ?? [null, null, null];
             $result[$chunkKey][$key % 3] = $value;

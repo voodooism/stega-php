@@ -7,7 +7,6 @@ namespace Voodooism\Stega\Encoder;
 use Exception;
 use ParagonIE\SeedSpring\SeedSpring;
 use Voodooism\Stega\Container\AbstractContainer;
-use Voodooism\Stega\Container\ContainerTypeEnum;
 use Voodooism\Stega\Container\Header;
 use Voodooism\Stega\Message\AbstractMessage;
 use Voodooism\Stega\Message\MessageFactory;
@@ -43,7 +42,7 @@ class ShuffleEncoder extends AbstractEncoder
      */
     public function encode(AbstractContainer $container, AbstractMessage $message): void
     {
-        $header = new Header(ContainerTypeEnum::IMAGE_TYPE, $message->getBinaryLength());
+        $header = new Header($container->getType(), $message->getBinaryLength());
 
         $bits = array_merge($header->getBinary(), $message->getBinary());
 

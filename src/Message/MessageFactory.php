@@ -7,6 +7,13 @@ namespace Voodooism\Stega\Message;
 use InvalidArgumentException;
 use Voodooism\Stega\Container\ContainerTypeEnum;
 
+/**
+ * TODO: Rewrite this piece of code
+ *
+ * Class MessageFactory
+ *
+ * @package Voodooism\Stega\Message
+ */
 abstract class MessageFactory
 {
     /**

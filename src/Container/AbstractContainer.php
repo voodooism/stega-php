@@ -7,6 +7,11 @@ namespace Voodooism\Stega\Container;
 abstract class AbstractContainer
 {
     /**
+     * @var int
+     */
+    protected $type;
+
+    /**
      * @return int
      */
     abstract public function getCapacity(): int;
@@ -28,4 +33,12 @@ abstract class AbstractContainer
      * @param string $path
      */
     abstract public function saveResource(string $path): void;
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
 }

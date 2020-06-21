@@ -9,7 +9,7 @@ class Pixel
     /**
      * @var int
      */
-    private $b;
+    private $r;
 
     /**
      * @var int
@@ -19,7 +19,7 @@ class Pixel
     /**
      * @var int
      */
-    private $r;
+    private $b;
 
     /**
      * @var int
@@ -46,7 +46,7 @@ class Pixel
     public function __construct($resource, int $width, int $number)
     {
         $x = $number % $width;
-        $y = (int)floor($number / $width);
+        $y = (int)($number / $width);
 
         $rgb = imagecolorat($resource, $x, $y);
 
@@ -58,6 +58,18 @@ class Pixel
 
         $this->x = $x;
         $this->y = $y;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getLastSignificantBits(): array
+    {
+        return [
+            $this->r  & 1,
+            $this->g  & 1,
+            $this->b  & 1
+        ];
     }
 
     /**
@@ -81,7 +93,7 @@ class Pixel
      *
      * @return int
      */
-    public function modifyLastSignificantBit(int $value, int $bit): int
+    private function modifyLastSignificantBit(int $value, int $bit): int
     {
         $binaryString = decbin($value);
 
@@ -90,17 +102,5 @@ class Pixel
         $integer = (int)bindec($lsbChanged);
 
         return $integer;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getLastSignificantBits(): array
-    {
-        return [
-            (($this->r >> 0) & 1),
-            (($this->g >> 0) & 1),
-            (($this->b >> 0) & 1)
-        ];
     }
 }
