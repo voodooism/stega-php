@@ -28,15 +28,12 @@ class Processor
     /**
      * @param AbstractContainer $container
      * @param AbstractMessage   $message
-     * @param string            $path
      *
      * @return void
      */
-    public function encode(AbstractContainer $container, AbstractMessage $message, string $path): void
+    public function encode(AbstractContainer $container, AbstractMessage $message): void
     {
         $this->encoder->encode($container, $message);
-
-        $container->saveResource($path);
     }
 
     /**

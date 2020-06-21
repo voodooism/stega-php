@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Voodooism\Stega\Tests\Integration;
+namespace Voodooism\Stega\Tests\Functional;
 
 use PHPUnit\Framework\TestCase;
 use Voodooism\Stega\Container\ImageContainer;
@@ -51,21 +51,22 @@ class ProcessorTest extends TestCase
     public function testImageContainerTextMessageSimpleEncoder(): void
     {
         $processor = new Processor(new SimpleEncoder());
+        $container = new ImageContainer($this->container);
 
         $processor->encode(
-            new ImageContainer($this->container),
+            $container,
             new TextMessage($messageText = file_get_contents($this->message)),
-            $this->fixturesPath
         );
+
+        $container->saveResource($this->fixturesPath);
 
         $this->assertNotEquals(
             file_get_contents($this->container),
             file_get_contents($this->encodedImage)
         );
 
-        $decodedMessage = $processor->decode(
-            new ImageContainer($this->encodedImage)
-        );
+        $container = new ImageContainer($this->encodedImage);
+        $decodedMessage = $processor->decode($container);
 
         $this->assertEquals($messageText, $decodedMessage->getMessage());
     }
@@ -73,12 +74,13 @@ class ProcessorTest extends TestCase
     public function testImageContainerTextMessageShuffleEncoder(): void
     {
         $processor = new Processor($encoder = new ShuffleEncoder('secret123'));
+        $container = new ImageContainer($this->container);
 
         $processor->encode(
-            new ImageContainer($this->container),
-            new TextMessage($messageText = file_get_contents($this->message)),
-            $this->fixturesPath
+            $container,
+            new TextMessage($messageText = file_get_contents($this->message))
         );
+        $container->saveResource($this->fixturesPath);
 
         $this->assertNotEquals(
             file_get_contents($this->container),
@@ -87,9 +89,8 @@ class ProcessorTest extends TestCase
 
         $newProcessor = new Processor($decoder = new ShuffleEncoder('secret123'));
 
-        $decodedMessage = $newProcessor->decode(
-            new ImageContainer($this->encodedImage)
-        );
+        $container = new ImageContainer($this->encodedImage);
+        $decodedMessage = $newProcessor->decode($container);
 
         $this->assertEquals($messageText, $decodedMessage->getMessage());
     }
